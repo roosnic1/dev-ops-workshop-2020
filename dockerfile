@@ -12,7 +12,6 @@ COPY --chown=node:node ./yarn.lock ./yarn.lock
 COPY --chown=node:node ./src/ ./src/
 
 RUN yarn install
-
 EXPOSE 5000
 
 CMD [ "node", "./src/index.js" ]
