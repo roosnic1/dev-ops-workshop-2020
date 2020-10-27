@@ -46,9 +46,12 @@ async function asyncMain() {
     app.listen(port, address)
 }
 
-asyncMain().catch(err => {
-    console.warn('Error during startup', err)
-    setTimeout(() => {
-        process.exit(0)
-    }, 5000)
-})
+setTimeout(() => {
+    asyncMain().catch(err => {
+        console.warn('Error during startup', err)
+        setTimeout(() => {
+            process.exit(0)
+        }, 5000)
+    })
+}, 4000)
+
