@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    # add an annotation indicating the issuer to use.
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "1m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "30"
+  name: devops
+  namespace: devops
+spec:
+  rules:
+    - host: devops-workshop.tsri.app
+      http:
+        paths:
+          - backend:
+              serviceName: devops
+              servicePort: 5000
+            path: /
+  tls: # < placing a host in the TLS config will indicate a certificate should be created
+    - hosts:
+        - devops-workshop.tsri.app
+      secretName: devops-workshop-cert-tls # < cert-manager will store the created certificate in this secret.

@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-production
+  namespace: devops
+  labels:
+    app: devops
+    releases: production
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devops
+      releases: production
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      name: devops-production
+      labels:
+        app: devops
+        releases: production
+    spec:
+      containers:
+        - name: devops-production
+          image: eu.gcr.io/tsri-246213/devops/website:latest
+          ports:
+            - containerPort: 5000
+          imagePullPolicy: IfNotPresent
+#          livenessProbe:
+#            httpGet:
+#              path: '/'
+#              port: 8080
+#              scheme: 'HTTP'
+#            initialDelaySeconds: 5
+#            successThreshold: 1
+#            timeoutSeconds: 60
+#          readinessProbe:
+#            httpGet:
+#              path: '/'
+#              port: 8080
+#              scheme: 'HTTP'
+#            initialDelaySeconds: 60
+#            periodSeconds: 60
+#            successThreshold: 1
+#            timeoutSeconds: 60
+          env:
+            - name: ADDRESS
+              value: '0.0.0.0'
+            - name: PORT
+              value: "5000"
+            - name: MONGO_URL
+              value: "mongodb://fake.com"
