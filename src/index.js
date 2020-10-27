@@ -8,6 +8,7 @@ async function asyncMain() {
     app.use(bodyParser.urlencoded({ extended: false }))
     app.use(bodyParser.json())
 
+    // Comment that does nothing
     let collection
 
     try {
