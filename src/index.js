@@ -1,21 +1,26 @@
 #!/usr/bin/env node
-//import express from 'express'
 const express = require('express')
 const { MongoClient } = require('mongodb')
 const bodyParser = require('body-parser')
 
 async function asyncMain() {
     const app = express()
-    app.use(bodyParser.urlencoded({ extended: false }));
-    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: false }))
+    app.use(bodyParser.json())
 
-    const client = await MongoClient.connect(process.env.MONGO_URL)
-    const db = client.db('dev-ops-workshop')
     let collection
+
     try {
-        collection = await db.createCollection('test')
+        const client = await MongoClient.connect(process.env.MONGO_URL)
+        const db = client.db('dev-ops-workshop')
+        try {
+            collection = await db.createCollection('test')
+        } catch(error) {
+            collection = await db.collection('test')
+        }
     } catch(error) {
-        collection = await db.collection('test')
+        console.log(error)
+        console.warn('Database not ready')
     }
 
     app.get('/show', async (req, res) => {
@@ -30,7 +35,6 @@ async function asyncMain() {
         })
         return res.json(result)
     })
-
 
     app.all('/*', (req, res) => {
         return res.json({message: 'Hello World'})
